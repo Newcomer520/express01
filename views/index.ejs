@@ -7,23 +7,30 @@
     
     
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
     <script src="script/1.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script>
+    	myApp.value('currentPage', '<%= current%>');
+    </script>
   </head>
-  <body>
+  <body ng-app="myApp">
   	<div class="container">
-  		<nav class="navigation">
+  		<nav class="navigation" ng-controller="staticMenu" >
   			<ul>
-  				<li><a href="/">Main</a></li>
+  				<!--<li><a href="/">Main</a></li>
   				<li><a href="/users">Angular Js</a></li>
-  				<li><a href="">nav 3</a></li>
-  				<li><a href="">nav 4</a></li>
-  				<li><a href="">nav 5</a></li>
-  				<!--<li class="csLogIn"><div ><a href="/login">Log In</a></div></li>  -->
+  				<li><a href="/sunflower" class="<%= current=='sunflower'? 'currentPage' : ''%>">太陽花學運</a></li>
+  				-->
+  				<li ng-repeat="menu in menus">
+  					<a href="{{menu.href}}" ng-class="{currentPage: currentPage == menu.name}"> {{menu.text}}</a>
+  				</li>
+  				<li>{{menuCtrl.currentPage}}</li>
+  				
   			</ul>  			
   		</nav>
   		<div class="mainBody">
-  		
+  			<%- mainBody %>
   		</div>
   	</div>
   </body>

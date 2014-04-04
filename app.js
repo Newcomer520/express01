@@ -11,6 +11,8 @@ var path = require('path');
 //var expressLayouts = require('express-ejs-layouts');
 
 
+global.appDir = path.dirname(require.main.filename);
+
 var app = express();
 
 // all environments
@@ -20,7 +22,8 @@ app.set('view engine', 'ejs');
 //app.set('layout', 'myLayout');
 
 
-app.use(express.favicon());
+//app.use(express.favicon());
+app.use(express.favicon("public/images/favicon.ico")); 
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
@@ -35,6 +38,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.get('/sunflower', routes.sunflower);
 app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
