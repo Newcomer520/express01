@@ -52,6 +52,7 @@ for navigation
 	text-align: center;
 	padding: 5px;
 	cursor: pointer;
+	box-sizing: border-box;
 }
 .navigation >ul > li:hover
 {
@@ -71,7 +72,7 @@ for navigation
 {
 	color: white;
 	text-decoration: none;
-	width: 100%;
+	width: 90%;
 	height: 100%;
 	display: block;
 	padding: 0.3em;
@@ -95,6 +96,10 @@ for navigation
 	border-left: 2px solid silver;
 	border-right: 2px solid silver;
 	box-sizing: border-box;
+	min-height: 500px;
+	border-bottom: 2px solid silver;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
 }
 .youtube
 {

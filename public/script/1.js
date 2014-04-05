@@ -18,8 +18,10 @@ myApp.controller('staticMenu', ['$scope', '$location','currentPage', function($s
 	$scope.currentPage = currentPage;
 	$scope.menus = [
 	     {name: 'index', text: 'Main', href: '/'},
-	     {name: 'users', text: 'Angular Js', href: '/users'},
+	     //{name: 'users', text: 'Angular Js', href: '/users'},
    	     {name: 'sunflower', text: '太陽花學運', href: '/sunflower'},
+   	     {name: 'mongo', text: '芒果', href: '/mongo'},
+   	     {name: 'todo', text: 'Todo List', href: '/todo'}
 	    ];
 }]);
 
