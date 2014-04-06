@@ -1,3 +1,18 @@
 <div ng-controller="todoCtrl">
-	<button ng-click="addNew()">新增</button>
+	<script>
+	</script>
+	<div class="new-todo">
+		<input focus-me="true" id="newTodo" ng-model="todo.content" class="new-todo-content" placeholder="input what to do here." />
+		<button ng-click="create()">新增</button>
+	</div>
+	<table>
+		<thead>
+			<tr><th>內容</th><th>Delete</th></tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="item in items">
+				<td>{{item.content}}</td><td></td>
+			</tr>
+		</tbody>
+	</table>
 </div>

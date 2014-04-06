@@ -13,7 +13,9 @@ var path = require('path');
 
 
 global.appDir = path.dirname(require.main.filename);
-
+global.dbLocation = {
+	nodeTest: "mongodb://localhost:27017/nodeTest"
+};
 var app = express();
 
 // all environments
@@ -27,8 +29,9 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(app.router);
+app.use(express.cookieParser());
 app.use(routes.setCookie);
+app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
@@ -42,6 +45,7 @@ app.get('/users', user.list);
 app.get('/mongo', mongo.index);
 app.get('/mongo/getlist', mongo.getList);
 app.get('/todo', todo.index);
+app.post('/todo', todo.create);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

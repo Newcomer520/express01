@@ -8,9 +8,7 @@ $(document).ready(function() {
 		//alert(this.href);
 		//return false;		
 	});
-	
 });
-
 
 //angular setting
 var myApp = angular.module('myApp', []);

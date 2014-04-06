@@ -1,0 +1,30 @@
+.new-todo
+{
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ddd;
+	
+}
+
+.new-todo *
+{
+	font-size: 18px;
+	
+}
+
+.new-todo-content
+{
+	width: 70%;
+	margin-right: 10px;
+}
+
+table
+{
+	width: 90%;
+}
+
+table th,
+table td
+{
+	text-align: center;
+}
