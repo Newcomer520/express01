@@ -40,6 +40,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.get('/V2', routes.portal);
 app.get('/sunflower', routes.sunflower);
 app.get('/users', user.list);
 app.get('/mongo', mongo.index);

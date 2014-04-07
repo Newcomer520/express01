@@ -11,6 +11,13 @@ exports.index = function(req, res){
 	  mainBody: '' });
 };
 
+//bootstrap
+exports.portal = function(req, res) {
+	res.render('basic');
+	
+}
+
+
 exports.sunflower = function(req, res) {
 	var meta = require(global.appDir + '/custom.js');
 	meta.readMetaHtml({path: '/views/Portal/sunflower.html', res: res, render: render});
