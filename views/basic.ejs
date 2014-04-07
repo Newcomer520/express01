@@ -5,61 +5,24 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="/stylesheets/v2.css" />
 		<style>
-			.container 
-			{
-				/*background-color: black;*/
-				
-			}
-			.nav-justified
-			{
-				border: 1px solid silver;
-			  	border-bottom: none;
-			  	border-top-left-radius: 5px;
-			  	border-top-right-radius: 5px;
-			  	background-color: black;
-			}
 			
-			.nav li a
-			{
-				height: 50px;
-				line-height: 30px;
-				vertical-align: middle;
-				color: white;
-				font-weight: bold;
-				font-size: 16px;
-				
-				-o-transition:color .2s ease-out, background .2s ease-in;
-  				-ms-transition:color .2s ease-out, background .2s ease-in;
-  				-moz-transition:color .2s ease-out, background .2s ease-in;
-  				-webkit-transition:color .2s ease-out, background .2s ease-in;
-  				/* ...and now for the proper property */
-  				transition:color .2s ease-out, background .2s ease-in;												
-			}
-			ul li:not(:first-child) a
-			{
-				border-left: 1px solid #fff !important;
-				/*background-color: yellow !important;*/
-			}
-			ul li:not(:last-child) a
-			{
-				border-right: 1px solid #d5d5d5 !important;
-			}
-			
-			.nav li a:hover
-			{
-				color: black;
-			}
 		</style>
 	</head>
 	<body>
-		<div class="container" style="margin-top:10px;">
-			<ul class="nav nav-justified">
-		      <li class="active"><a href="#">Main</a></li>
-		      <li><a href="#">太陽花學運</a></li>
-		      <li><a href="#">芒果</a></li>
-		      <li><a href="#">Todo List</a></li>		    
-	    	</ul>
-		</div>		
+		<ul class="nav nav-justified">
+	      <li class="<%= current=='main' ? 'active' : ''%>"><a href="/">Main</a></li>
+	      <li class="<%= current=='sunflower' ? 'active' : ''%>"><a href="/sunflower">太陽花學運</a></li>
+	      <li class="<%= current=='mongo' ? 'active' : ''%>"><a href="/mongo">芒果</a></li>
+	      <li class="<%= current=='todo' ? 'active' : ''%>"><a href="/todo">Todo List</a></li>		    
+    	</ul>
+    	<div class="container mainBody">
+    		<% if (typeof(mainBody) !== "undefined") {%>
+    			<%- mainBody %>
+    		<% } else {%>
+    			<h1>5566不能亡！</h1>
+    		<% } %>
+    	</div>
 	</body>
 </html>

@@ -1,0 +1,67 @@
+.container 
+{
+	/*background-color: black;*/
+	max-width: 970px;
+	border-left: 1px solid silver;
+	border-right: 1px solid silver;
+}
+.nav-justified
+{
+	border: 1px solid silver;
+  	border-bottom: none;
+  	border-top-left-radius: 5px;
+  	border-top-right-radius: 5px;
+  	background-color: black;
+  	max-width: 970px;
+  	margin-left: auto;
+  	margin-right: auto;
+  	margin-top: 20px;
+}
+
+.nav li a
+{
+	height: 50px;
+	line-height: 30px;
+	vertical-align: middle;
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+	
+	-o-transition:color .2s ease-out, background .2s ease-in;
+	-ms-transition:color .2s ease-out, background .2s ease-in;
+	-moz-transition:color .2s ease-out, background .2s ease-in;
+	-webkit-transition:color .2s ease-out, background .2s ease-in;
+	/* ...and now for the proper property */
+	transition:color 0.2s ease-out, background 0.2s ease-in;												
+}
+.nav li a:hover
+{
+	color: black;				
+}
+.nav li.active a
+{
+	/*text-decoration: underline;*/
+	border-bottom : 5px solid silver;
+}
+.mainBody
+{
+	color: silver;
+	min-height: 500px;
+	background-color: black;
+	box-sizing: border-box;
+	padding-top: 30px;
+	border-top: 1px solid silver;
+}
+
+@media screen and (min-width: 768px)
+{
+	ul li:not(:first-child) a
+	{
+		border-left: 1px solid #fff !important;
+		/*background-color: yellow !important;*/
+	}
+	ul li:not(:last-child) a
+	{
+		border-right: 1px solid #d5d5d5 !important;
+	}
+}

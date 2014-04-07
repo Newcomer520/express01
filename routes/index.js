@@ -13,9 +13,12 @@ exports.index = function(req, res){
 
 //bootstrap
 exports.portal = function(req, res) {
-	res.render('basic');
+	res.render('basic', {current: 'main'});	
+};
+exports.sunflowerV2 = function(req, res) {
 	
-}
+	
+};
 
 
 exports.sunflower = function(req, res) {
