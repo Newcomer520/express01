@@ -6,13 +6,14 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
-var mongo = require('./routes/mongo.js')
-  ,	todo = require('./routes/todo.js');
 var http = require('http');
 var path = require('path');
 
-
 global.appDir = path.dirname(require.main.filename);
+
+var mongo = require('./routes/mongo.js')
+,	todo = require('./routes/todo.js');
+
 global.dbLocation = {
 	nodeTest: "mongodb://localhost:27017/nodeTest"
 };
@@ -46,7 +47,9 @@ app.get('/users', user.list);
 app.get('/mongo', mongo.index);
 app.get('/mongo/getlist', mongo.getList);
 app.get('/todo', todo.index);
-app.post('/todo', todo.create);
+app.get('/api/todo', todo.getAll);
+app.post('/api/todo', todo.create);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

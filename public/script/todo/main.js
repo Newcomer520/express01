@@ -14,12 +14,15 @@ myApp.controller('todoCtrl', ['$scope', '$http', function($scope, $http) {
 		if (!$scope.todo.content || $scope.todo.content == '')
 			return;
 		data = {todo: {content: $scope.todo.content}};
-		$http.post('/todo', data)
+		$http.post('api/todo', data)
 		.error(function(err) {
 			alert(err);
 		})
 		.success(function(res) {
-			$scope.items = res;
+			//chain again. ajax for the updated content
+			$http.get('api/todo').success(function(res) {
+				$scope.items = res;
+			});
 		});
 	};
 	//$scope.items = [1, 2, 3, 4, 5];

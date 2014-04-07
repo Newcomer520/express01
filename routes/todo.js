@@ -1,13 +1,13 @@
-var mongoose = require('mongoose');
+/*var mongoose = require('mongoose');
 var todoSchema = mongoose.Schema({
 	creator: String,
 	date: String,
 	content: String,
 	confirmed: Boolean
 });
-var todo = mongoose.model('todos', todoSchema);
+var todo = mongoose.model('todos', todoSchema);*/
 
-
+var todos = require(global.appDir + '/ORM/todos.js');
 
 exports.index = function(req, res)
 {
@@ -37,11 +37,16 @@ exports.create = function(req, res, next)
 		res.status(403).send('內容無效');
 	}
 	
-	var newTodo = new todo({
+	var newTodo = {
 		creator: req.cookies.uid,
 		content: req.body.todo.content,
 		confirmed: false
+	};
+	
+	todos.create(newTodo, function() {
+		res.status(200).send('ok');
 	});
+	/*
 	mongoose.connect('mongodb://localhost:27017/nodeTest');
 	var db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'connection error:'));
@@ -62,5 +67,11 @@ exports.create = function(req, res, next)
 			//res.status(200).send('ok');
 			
 		});
-	});
+	});*/
 };
+
+exports.getAll = function(req, res) {
+	todos.getAll(function(data) {
+		res.json(data);
+	});
+}
