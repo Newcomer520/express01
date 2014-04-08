@@ -1,4 +1,4 @@
-	
+
 exports.readMetaHtml = function(o)
 {
 	if (!o.res || ! o.path) {
@@ -21,7 +21,18 @@ exports.readMetaHtml = function(o)
 			
 	}
 };
-
+/*較新*/
+exports.readHtml = function(htmlpath, cb) {
+	var chain = require('slide').chain;
+	var resChain = []
+	,	last = chain.last
+	,	first = chain.first
+	,	fs = require('fs');
+	
+	chain([
+ 	  [fs, 'readFile', htmlpath],
+ 	  [cb, last]]);	
+};
 exports.ejsData = function(o)
 {
 	var extend =require('extend');

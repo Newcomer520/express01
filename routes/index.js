@@ -3,6 +3,8 @@
  * GET home page.
  */
 
+var	custom = require(global.appDir + '/custom.js');
+
 exports.index = function(req, res){
   res.render('index', 
 	  { 
@@ -13,11 +15,43 @@ exports.index = function(req, res){
 
 //bootstrap
 exports.portal = function(req, res) {
-	res.render('basic', {current: 'main'});	
+var htmlpath = global.appDir + '/views/todo/1.html';
+	
+	custom.readHtml(htmlpath, cb);
+	
+	function cb(data)
+	{
+		res.render('basic', 
+			custom.ejsData(
+				{
+					current:'main', 
+					title: 'To-do List', 
+					mainBody: data.toString(),
+					scripts: ['script/mongo/main.js'],
+					css: ['stylesheets/mongo.css']
+				}));		
+	}
+	
 };
-exports.sunflowerV2 = function(req, res) {
+exports.portalByChain = function(req, res) {
+
 	
+	var htmlpath = global.appDir + '/views/todo/1.html';
 	
+	custom.readHtml(htmlpath, cb);
+	
+	function cb(data)
+	{
+		res.render('basic', 
+			custom.ejsData(
+				{
+					current:'main', 
+					title: 'To-do List', 
+					mainBody: data.toString(),
+					scripts: ['script/mongo/main.js'],
+					css: ['stylesheets/mongo.css']
+				}));		
+	}
 };
 
 

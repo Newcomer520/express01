@@ -2,14 +2,14 @@
 /**
  * Module dependencies.
  */
+var path = require('path');
+global.appDir = path.dirname(require.main.filename);
 
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
-var path = require('path');
 
-global.appDir = path.dirname(require.main.filename);
 
 var mongo = require('./routes/mongo.js')
 ,	todo = require('./routes/todo.js');
@@ -40,8 +40,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/V2', routes.portal);
+app.get('/V2', routes.index);
+app.get('/', routes.portal);
 app.get('/sunflower', routes.sunflower);
 app.get('/users', user.list);
 app.get('/mongo', mongo.index);

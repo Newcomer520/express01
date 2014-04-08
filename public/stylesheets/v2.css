@@ -53,14 +53,18 @@
 	border-top: 1px solid silver;
 }
 
-@media screen and (min-width: 768px)
+@media screen and (min-width: 768px) and (max-width: 1000px)
 {
-	ul li:not(:first-child) a
+	ul.nav
+	{
+		width: 750px;
+	}
+	ul.nav li:not(:first-child) a
 	{
 		border-left: 1px solid #fff !important;
 		/*background-color: yellow !important;*/
 	}
-	ul li:not(:last-child) a
+	ul.nav li:not(:last-child) a
 	{
 		border-right: 1px solid #d5d5d5 !important;
 	}

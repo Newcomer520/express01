@@ -11,6 +11,7 @@
     "mongodb": "*",
     "monk": "*",
     "mongoose": "*",
-    "extend": "*"
+    "extend": "*",
+    "slide": "*"
   }
 }
