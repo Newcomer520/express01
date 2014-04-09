@@ -1,4 +1,4 @@
-<% layout(global.appDir + '/views/basic.ejs') -%>
+<% layout('/basic.ejs') -%>
 <% script('//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js') %>
 <% script('script/todo/todo.js') -%>
 <% stylesheet('stylesheets/todo/todo.css') -%>
@@ -20,7 +20,8 @@
     	<tbody>
     		<!--<tr ng-repeat="item in items"><td><c-textarea show-icon="true" editable="item.editable">{{item.name}}</c-content></td><td>test</td><td></td></tr>-->
     		<tr ng-repeat="item in items">
-    			<td c-editflag="textarea">{{item.name}}</td>
+    			<td c-editflag="textarea" c-editable="item.editable" c-showicon="false">{{item.name}}</td>
+    			<!--<td c-editflag="textarea">{{item.name}}</td>-->
     		</tr>	
     	</tbody>
 	</table>

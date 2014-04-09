@@ -17,11 +17,13 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 	    }
 	  };
 	}
-).directive('cTextarea', function() {
+)
+.directive('cTextarea', function() {
 	var templateContent =
 			'<div ng-transclude style="float:left;"></div>' +
 			'<span class="td-edit-btn">Edit	</span>' +
 			'<div style="clear:both"></div>';
+	
 	return {
 		restrict: 'E',
 		transclude : true,
@@ -52,14 +54,47 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 })
 .directive('cEditflag', function() {
 	var templateContent =
-		'<td><div ng-transclude style="float:left;"></div>' +
+		'<div ng-transclude style="float:left;"></div>' +
 		'<span class="td-edit-btn">Edit	</span>' +
-		'<div style="clear:both"></div></td>';
+		'<div style="clear:both"></div>';
+	
 	return {
-		replace: true,
-		restrict: 'E',
+		replace: false,
+		restrict: 'AE',
 		transclude : true,
-		template: templateContent
+		template: templateContent,
+		scope: {
+			editable: '@cEditable',
+			showicon: '@cShowicon',
+			editflag: '@cEditflag'
+		},
+		link : function(scope, element, attrs) {
+			
+			if ((scope.editable && scope.editable == true)
+			 && (scope.showicon == undefined || (scope.showicon && scope.showicon == true))) 
+			{
+				
+				element[0].childNodes[1].style.visibility = 'visible';
+			}
+			else {
+				element[0].childNodes[1].style.visibility = 'hidden';				
+			}
+			
+			var eleContent = element[0].childNodes[0].innerText;
+			
+            element.bind('click', function() {
+            	if (scope.editable == undefined || scope.editable == false)
+	        		return true;
+            	switch(scope.editflag)
+            	{
+            		case 'textarea':
+            			var textarea = '<textarea></textarea>';
+            			break;
+            	}
+            	alert(this);
+            	
+            });
+        }
 		
 	};	
 });
