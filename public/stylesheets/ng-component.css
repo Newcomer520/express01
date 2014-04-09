@@ -1,0 +1,16 @@
+.cell-update
+{
+	color: Red;
+	
+}
+.td-edit-btn
+{
+	text-decoration: underline;
+	float:right;
+	cursor: default;
+}
+.td-edit-btn:hover
+{
+	color: white;
+	
+}

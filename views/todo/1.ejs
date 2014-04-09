@@ -2,6 +2,7 @@
 <% script('//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js') %>
 <% script('script/todo/todo.js') -%>
 <% stylesheet('stylesheets/todo/todo.css') -%>
+<% stylesheet('stylesheets/ng-component.css') -%>
 
 
 <div class="table-container" ng-app="myApp" ng-controller="todoCtrl">
@@ -16,9 +17,11 @@
         		<th>刪除?</th>
     		</tr>
     	</thead>
-    	<tbody>	
-    		<tr><td><div-test>5566123</div-test></td><td>test</td><td></td></tr>
-			<cus-tr></cus-tr>
+    	<tbody>
+    		<!--<tr ng-repeat="item in items"><td><c-textarea show-icon="true" editable="item.editable">{{item.name}}</c-content></td><td>test</td><td></td></tr>-->
+    		<tr ng-repeat="item in items">
+    			<td c-editflag="textarea">{{item.name}}</td>
+    		</tr>	
     	</tbody>
 	</table>
 </div>
