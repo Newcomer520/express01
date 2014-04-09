@@ -12,6 +12,7 @@
     "monk": "*",
     "mongoose": "*",
     "extend": "*",
-    "slide": "*"
+    "slide": "*",
+    "ejs-locals": "*"
   }
 }

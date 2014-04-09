@@ -15,10 +15,10 @@ exports.index = function(req, res){
 
 //bootstrap
 exports.portal = function(req, res) {
-var htmlpath = global.appDir + '/views/todo/1.html';
+var htmlpath = global.appDir + '/views/todo/1.ejs';
 	
-	custom.readHtml(htmlpath, cb);
-	
+	//custom.readHtml(htmlpath, cb);
+	res.render(global.appDir + '/views/todo/1.ejs', {current:'main', title: 'To-do List'});
 	function cb(data)
 	{
 		res.render('basic', 
@@ -26,9 +26,10 @@ var htmlpath = global.appDir + '/views/todo/1.html';
 				{
 					current:'main', 
 					title: 'To-do List', 
-					mainBody: data.toString(),
-					scripts: ['script/mongo/main.js'],
-					css: ['stylesheets/mongo.css']
+					mainBody: data.toString()
+					//scripts: ['script/mongo/main.js'],
+					//scripts: ['//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js', 'script/todo/todo.js'],
+					//css: ['stylesheets/mongo.css']
 				}));		
 	}
 	

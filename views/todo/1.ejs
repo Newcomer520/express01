@@ -1,0 +1,24 @@
+<% layout(global.appDir + '/views/basic.ejs') -%>
+<% script('//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js') %>
+<% script('script/todo/todo.js') -%>
+<% stylesheet('stylesheets/todo/todo.css') -%>
+
+
+<div class="table-container" ng-app="myApp" ng-controller="todoCtrl">
+	<input class="new-todo new-todo-input" focus-me="true" placeholder="new to-do" />
+	<button class="new-todo" ">新增</button>
+	<button class="new-todo">存檔</button>
+	<table class="table">
+    	<thead>
+    		<tr>
+        		<th>事項</th>
+        		<th>已確認</th>
+        		<th>刪除?</th>
+    		</tr>
+    	</thead>
+    	<tbody>	
+    		<tr><td><div-test>5566123</div-test></td><td>test</td><td></td></tr>
+			<cus-tr></cus-tr>
+    	</tbody>
+	</table>
+</div>
