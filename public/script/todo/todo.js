@@ -53,34 +53,57 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 	
 })
 .directive('cEditflag', function() {
-	var templateContent =
-		'<div ng-transclude style="float:left;"></div>' +
-		'<span class="td-edit-btn">Edit	</span>' +
-		'<div style="clear:both"></div>';
-	
+	var templateContent;
+	var editor, content;
 	return {
 		replace: false,
 		restrict: 'AE',
-		transclude : true,
-		template: templateContent,
+		//transclude : true,
+		//template: templateContent,
+		template: function(tElement, tAttrs)
+		{
+			switch (tAttrs.cEditflag) {
+				case 'textarea':
+					templateContent =
+						//'<div style="float:left;" ng-transclude>{{item.name}}</div>' +
+						'<div class="c-td-origin">{{content}}</div>' +
+						'<textarea class="c-textarea c-hidden" ng-model="content"></textarea>' +
+						//'<input style="float:left;" value="{{content}}" />' +
+						'<span class="c-td-edit-btn">Edit	</span>' +
+						'<div style="clear:both"></div>';
+					tElement.replaceWith(templateContent);
+					break;			
+			}
+		},
 		scope: {
-			editable: '@cEditable',
-			showicon: '@cShowicon',
-			editflag: '@cEditflag'
+			editable: '=cEditable',
+			showicon: '=cShowicon',
+			content:  '=cContent',
+			editflag: '@cEditflag' //@ means get string from the attribute
 		},
 		link : function(scope, element, attrs) {
+			if (scope.content == undefined) {
+				throw "neet to specify content";				
+			}
+			switch(scope.editflag) {
+			case 'textarea':
+				break;			
+			}
 			
-			if ((scope.editable && scope.editable == true)
+			/*if ((scope.editable && scope.editable == true)
 			 && (scope.showicon == undefined || (scope.showicon && scope.showicon == true))) 
 			{
 				
-				element[0].childNodes[1].style.visibility = 'visible';
+				//element[0].childNodes[element[0].childNodes.length - 2].style.visibility = 'visible';
+				//length - 1是 div clear both;
 			}
 			else {
-				element[0].childNodes[1].style.visibility = 'hidden';				
-			}
+				element[0].childNodes[element[0].childNodes.length - 2].className = 
+					element[0].childNodes[element[0].childNodes.length - 2].className + ' c-hidden';
+				//element[0].childNodes[element[0].childNodes.length - 2].style.visibility = 'hidden';				
+			}*/
 			
-			var eleContent = element[0].childNodes[0].innerText;
+			var editor = element[0]
 			
             element.bind('click', function() {
             	if (scope.editable == undefined || scope.editable == false)
@@ -88,7 +111,6 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
             	switch(scope.editflag)
             	{
             		case 'textarea':
-            			var textarea = '<textarea></textarea>';
             			break;
             	}
             	alert(this);

@@ -17,6 +17,10 @@
   	margin-right: auto;
   	margin-top: 20px;
 }
+ul.dropdown-menu li a
+{
+	color: black;
+}
 
 .nav li a
 {
@@ -38,7 +42,7 @@
 {
 	color: black;				
 }
-.nav li.active a
+li.active a
 {
 	/*text-decoration: underline;*/
 	border-bottom : 5px solid silver;

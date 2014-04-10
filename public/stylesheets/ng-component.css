@@ -3,14 +3,29 @@
 	color: Red;
 	
 }
-.td-edit-btn
+.c-td-edit-btn
 {
 	text-decoration: underline;
 	float:right;
-	cursor: default;
+	cursor: default;	
 }
-.td-edit-btn:hover
+.c-td-edit-btn:hover
 {
-	color: white;
+	color: white;	
+}
+
+.c-td-origin
+{
+	float:left;	
+}
+
+.c-textarea
+{
+	float: left;
+	width:100%;
 	
+}
+.c-hidden
+{
+	display: none;	
 }

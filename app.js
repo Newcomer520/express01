@@ -13,7 +13,8 @@ var engine = require('ejs-locals');
 
 
 var mongo = require('./routes/mongo.js')
-,	todo = require('./routes/todo.js');
+,	todo = require('./routes/todo.js')
+,	working = require('./routes/working.js');
 
 global.dbLocation = {
 	nodeTest: "mongodb://localhost:27017/nodeTest"
@@ -48,6 +49,7 @@ app.get('/sunflower', routes.sunflower);
 app.get('/users', user.list);
 app.get('/mongo', mongo.index);
 app.get('/mongo/getlist', mongo.getList);
+app.get('/jcube', working.jCubeTest);
 app.get('/todo', todo.index);
 app.get('/api/todo', todo.getAll);
 app.post('/api/todo', todo.create);
