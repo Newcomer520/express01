@@ -1,3 +1,52 @@
+.table-container {
+	margin-left: 50px;
+	margin-right: 50px;
+	box-sizing: border-box;
+}
+table {
+    width: 100%;            
+}
+
+thead, tbody, tr, td, th { display: block; }
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+thead th {
+    height: 30px;
+
+    /*text-align: left;*/
+  }
+
+tbody {
+    height: 100px;
+    overflow-y: auto;
+}
+
+thead {
+    /* fallback */
+      }
+
+tbody tr:first-child td
+{
+	border-top: none;
+}
+tbody td:not(:first-child), thead th:not(:first-child) {
+    width: 20%;
+}
+tbody td:first-child, thead th:first-child {
+    width: 60%;
+}
+tbody td, thead th {
+    float: left;
+}
+
+
+
 .new-todo
 {
 	color: black;
@@ -10,7 +59,13 @@
 }
 
 .table th:first-child
+,.table tr td:first-child
 {
 	width: 50%;
+	
+}
+.c-editor
+{
+	color: #000000;
 	
 }

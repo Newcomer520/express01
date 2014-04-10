@@ -72,6 +72,16 @@ exports.create = function(req, res, next)
 
 exports.getAll = function(req, res) {
 	todos.getAll(function(data) {
-		res.json(data);
+		var items = [];
+		data.forEach(function(item) {
+			items.push(
+				{
+					content: item.content,
+					confirmed: item.confirmed,
+					editable: true
+				}
+			);
+		});
+		res.json(items);
 	});
 }

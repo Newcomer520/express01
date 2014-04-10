@@ -1,4 +1,4 @@
-.cell-update
+.c-updated
 {
 	color: Red;
 	
@@ -14,7 +14,8 @@
 	color: white;	
 }
 
-.c-td-origin
+
+.c-content
 {
 	float:left;	
 }
