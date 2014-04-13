@@ -2,7 +2,9 @@
  * New node file
  */
 //angular.module('focusMe', function($timeout) {
-angular.module('customComponent', []).directive('focusMe', function($timeout) {
+(function(){
+angular.module('customComponent', [])
+.directive('focusMe', function($timeout) {
 	  return {
 	    scope: { trigger: '@focusMe' },
 	    link: function(scope, element) {
@@ -18,62 +20,18 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 	  };
 	}
 )
-.directive('cTextarea', function() {
-	var templateContent =
-			'<div ng-transclude style="float:left;"></div>' +
-			'<span class="td-edit-btn">Edit	</span>' +
-			'<div style="clear:both"></div>';
-	
-	return {
-		restrict: 'E',
-		transclude : true,
-		template: templateContent,
-		scope: {
-			editable: '=editable',
-			showIcon: '=showIcon'
-		},
-		link : function(scope, element, attrs) {
-			if ((scope.editable && scope.editable == true)
-			 && (scope.showIcon && scope.showIcon == true)) 
-			{
-				
-				element[0].childNodes[1].style.visibility = 'visible';
-			}
-			else {
-				element[0].childNodes[1].style.visibility = 'hidden';				
-			}
-            element[0].onclick = function() {
-            	if (!scope.editable || scope.editable == false)
-	        		return true;
-            	alert(this);
-            	
-            };
-        }
-	}
-	
-})
-.directive('cEditflag', function() {
+.directive('cEditflag', function($compile) {
 	var templateContent;
 	var editor, content;
+	
 	return {
 		replace: false,
 		restrict: 'AE',
 		//transclude : true,
-		//template: templateContent,
-		template: function(tElement, tAttrs)
+		//template: '',
+		template1: function(tElement, tAttrs)
 		{
-			switch (tAttrs.cEditflag) {
-				case 'textarea':
-					templateContent =
-						//'<div style="float:left;" ng-transclude>{{item.name}}</div>' +
-						'<div class="c-td-origin">{{content}}</div>' +
-						'<textarea class="c-textarea c-hidden" ng-model="content"></textarea>' +
-						//'<input style="float:left;" value="{{content}}" />' +
-						'<span class="c-td-edit-btn">Edit	</span>' +
-						'<div style="clear:both"></div>';
-					tElement.replaceWith(templateContent);
-					break;			
-			}
+
 		},
 		scope: {
 			editable: '=cEditable',
@@ -86,11 +44,22 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 				throw "neet to specify content";				
 			}
 			switch(scope.editflag) {
-			case 'textarea':
-				break;			
+				case 'textarea':
+					templateContent =
+						'<div class="c-content">{{content}}</div>' +
+						'<textarea class="c-editor c-textarea c-hidden" ng-model="content"></textarea>' +
+						'<span class="c-td-edit-btn">Edit	</span>' +
+						'<div style="clear:both"></div>';
+					element.html(templateContent).show();
+					$compile(element.contents())(scope);
+					break;			
 			}
 			
-			/*if ((scope.editable && scope.editable == true)
+			var content = element.children('.c-content')
+			  , editor = element.children('.c-editor')
+			  ,	btn = element.children('.c-td-edit-btn');
+			
+			if ((scope.editable && scope.editable == true)
 			 && (scope.showicon == undefined || (scope.showicon && scope.showicon == true))) 
 			{
 				
@@ -98,26 +67,44 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 				//length - 1是 div clear both;
 			}
 			else {
-				element[0].childNodes[element[0].childNodes.length - 2].className = 
-					element[0].childNodes[element[0].childNodes.length - 2].className + ' c-hidden';
+				btn.addClass('c-hidden');
+				//element[0].childNodes[element[0].childNodes.length - 2].className = 
+					//element[0].childNodes[element[0].childNodes.length - 2].className + ' c-hidden';
 				//element[0].childNodes[element[0].childNodes.length - 2].style.visibility = 'hidden';				
-			}*/
+			}
 			
-			var editor = element[0]
-			
-            element.bind('click', function() {
-            	if (scope.editable == undefined || scope.editable == false)
-	        		return true;
-            	switch(scope.editflag)
-            	{
-            		case 'textarea':
-            			break;
-            	}
-            	alert(this);
-            	
-            });
+			if (scope.editable == true) {
+				editor.bind('change', function() {
+					content.addClass('c-updated');
+				});
+				editor.bind('blur', function() {
+					editor.addClass('c-hidden');
+					content.removeClass('c-hidden');
+					if (scope.showicon == true) {
+						btn.removeClass('c-hidden');
+					}
+				});
+				switch(scope.showicon) {
+					case true:
+						btn.bind('click', function() {
+							content.addClass('c-hidden');
+							editor.removeClass('c-hidden');
+							btn.addClass('c-hidden');
+							editor.focus();
+							editor.select();
+						});
+						break;
+					default:
+						element.bind('click', function() {
+							content.addClass('c-hidden');
+							editor.removeClass('c-hidden');
+							editor.focus();
+							editor.select();
+						});
+						break;
+				}
+			}
         }
-		
 	};	
 });
 
@@ -125,21 +112,57 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 
 var myApp = angular.module('myApp', ['customComponent']);
 
-myApp.controller('todoCtrl',['$scope', function($scope) {
+myApp.controller('todoCtrl',['$scope', '$http', function($scope, $http) {
+	//this.clientId = clientId;
+	$scope.formData = {};
+	$scope.newTodo = "";
 	$scope.x = "xXx content";
 	$scope.items = 
 		[
 		 	{
-		 		name: 'I-Lun',
+		 		content: 'I-Lun',
+		 		confirmed: false,
 		 		editable: true
 		 	},
 		 	{
-		 		name: 'Andersen',
-		 		editable: false
+		 		content: 'Andersen',
+		 		confirmed: false,
+		 		editable: true
 		 	}
-        ]
+        ];
+	if (true) {
+		$http.get('api/todo')
+		.success(function(jsonItems) {
+			$scope.items = jsonItems 
+		});
+	}
+	
+	$scope.confirm = function()
+	{
+	};
+	
+	$scope.processForm = function()
+	{
+		
+	}
+	$scope.isNewTodoEmpty = function(newTodo)
+	{
+		return newTodo === "";
+	}
+	$scope.deleteItem = function(item)
+	{
+		if (confirm('是否確認要刪除' + item.content) == false)
+			return false;
+		
+	}
+	$scope.logout = function()
+	{
+		alert('ready to logout');
+		return false;
+		
+	}
 }]);
-
+//})();
 /*
 myApp.directive('focusMe', function($timeout) {
 	  return {
@@ -157,3 +180,4 @@ myApp.directive('focusMe', function($timeout) {
 	  };
 	}
 );*/
+})()
