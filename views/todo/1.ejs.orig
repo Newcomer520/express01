@@ -1,8 +1,13 @@
 <!-- linux path is different from windows one -->
 <!-- layout(global.appDir + '/views/basic.ejs')  -->
 <% layout('../basic.ejs') -%>
+<<<<<<< HEAD
 <% script('//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js') -%>
 <% script('script/api/oauth.js') -%>
+=======
+<% script('//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js') %>
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
+<% script('script/todo/todo.js') -%>
 <% stylesheet('stylesheets/todo/todo.css') -%>
 <% stylesheet('stylesheets/ng-component.css') -%>
 
@@ -20,6 +25,7 @@
 		<button class="new-todo" type="submit">存檔</button>
 	</form>
 	<table class="table">
+<<<<<<< HEAD
 	    	<thead>
 	    		<tr>
 	        		<th>事項</th>
@@ -36,6 +42,24 @@
 	    			<!--<td c-editflag="textarea">{{item.name}}</td>-->
 	    		</tr>	
 	    	</tbody>
+=======
+    	<thead>
+    		<tr>
+        		<th>事項</th>
+        		<th>已確認</th>
+        		<th>刪除?</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<!--<tr ng-repeat="item in items"><td><c-textarea show-icon="true" editable="item.editable">{{item.name}}</c-content></td><td>test</td><td></td></tr>-->
+    		<tr ng-repeat="item in items">
+    			<td c-editflag="textarea" c-editable="item.editable" c-showicon="true" c-content="item.content"></td>
+    			<td><input type="checkbox" ng-model="item.confirmed" ng-change="confirm()"/></td>
+    			<td><input type="checkbox"/></td>   			
+    			<!--<td c-editflag="textarea">{{item.name}}</td>-->
+    		</tr>	
+    	</tbody>
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 	</table>
 	
 	<hr />

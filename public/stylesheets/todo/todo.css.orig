@@ -33,7 +33,11 @@ thead {
 
 tbody tr:first-child td
 {
+<<<<<<< HEAD
 	border-top: none !important;
+=======
+	border-top: none;
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 }
 tbody td:not(:first-child), thead th:not(:first-child) {
     width: 20%;
@@ -47,7 +51,11 @@ tbody td, thead th {
 
 
 
+<<<<<<< HEAD
 button:not(:disabled)
+=======
+.new-todo
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 {
 	color: black;
 }
@@ -67,10 +75,17 @@ button:not(:disabled)
 	width: 50%;
 	
 }
+<<<<<<< HEAD
 button 
 {
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
+=======
+.c-editor
+{
+	color: #000000;
+	
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 }

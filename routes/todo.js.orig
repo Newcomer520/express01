@@ -71,6 +71,7 @@ exports.create = function(req, res, next)
 };
 
 exports.getAll = function(req, res) {
+<<<<<<< HEAD
 	todos.find({}, function(err, docs) {
 		if (err)
 			throw err;
@@ -88,6 +89,9 @@ exports.getAll = function(req, res) {
 	})
 	
 	/*todos.getAll(function(data) {
+=======
+	todos.getAll(function(data) {
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 		var items = [];
 		data.forEach(function(item) {
 			items.push(
@@ -99,5 +103,9 @@ exports.getAll = function(req, res) {
 			);
 		});
 		res.json(items);
+<<<<<<< HEAD
 	});*/
+=======
+	});
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 }

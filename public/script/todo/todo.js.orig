@@ -2,8 +2,13 @@
  * New node file
  */
 //angular.module('focusMe', function($timeout) {
+(function(){
+<<<<<<< HEAD
 angular.module('customComponent', [])
 .directive('focusMe', function($timeout) {
+=======
+angular.module('customComponent', []).directive('focusMe', function($timeout) {
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 	  return {
 	    scope: { trigger: '@focusMe' },
 	    link: function(scope, element) {
@@ -71,6 +76,7 @@ angular.module('customComponent', [])
 					//element[0].childNodes[element[0].childNodes.length - 2].className + ' c-hidden';
 				//element[0].childNodes[element[0].childNodes.length - 2].style.visibility = 'hidden';				
 			}
+<<<<<<< HEAD
 			
 			if (scope.editable == true) {
 				editor.bind('change', function() {
@@ -103,6 +109,7 @@ angular.module('customComponent', [])
 						break;
 				}
 			}
+=======
 			
 			if (scope.editable == true) {
 				editor.bind('change', function() {
@@ -158,9 +165,12 @@ angular.module('customComponent', [])
 var myApp = angular.module('myApp', ['customComponent']);
 
 myApp.controller('todoCtrl',['$scope', '$http', function($scope, $http) {
+<<<<<<< HEAD
 	//this.clientId = clientId;
 	$scope.formData = {};
 	$scope.newTodo = "";
+=======
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 	$scope.x = "xXx content";
 	$scope.items = 
 		[
@@ -184,6 +194,7 @@ myApp.controller('todoCtrl',['$scope', '$http', function($scope, $http) {
 	
 	$scope.confirm = function()
 	{
+<<<<<<< HEAD
 	};
 	
 	$scope.processForm = function()
@@ -206,7 +217,10 @@ myApp.controller('todoCtrl',['$scope', '$http', function($scope, $http) {
 		return false;
 		
 	}
-
+=======
+		alert('hi');
+	};
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
 }]);
 //})();
 /*
