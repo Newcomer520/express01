@@ -2,8 +2,8 @@
  * New node file
  */
 //angular.module('focusMe', function($timeout) {
-(function(){
-angular.module('customComponent', []).directive('focusMe', function($timeout) {
+angular.module('customComponent', [])
+.directive('focusMe', function($timeout) {
 	  return {
 	    scope: { trigger: '@focusMe' },
 	    link: function(scope, element) {
@@ -104,6 +104,38 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 				}
 			}
 			
+			if (scope.editable == true) {
+				editor.bind('change', function() {
+					content.addClass('c-updated');
+				});
+				editor.bind('blur', function() {
+					editor.addClass('c-hidden');
+					content.removeClass('c-hidden');
+					if (scope.showicon == true) {
+						btn.removeClass('c-hidden');
+					}
+				});
+				switch(scope.showicon) {
+					case true:
+						btn.bind('click', function() {
+							content.addClass('c-hidden');
+							editor.removeClass('c-hidden');
+							btn.addClass('c-hidden');
+							editor.focus();
+							editor.select();
+						});
+						break;
+					default:
+						element.bind('click', function() {
+							content.addClass('c-hidden');
+							editor.removeClass('c-hidden');
+							editor.focus();
+							editor.select();
+						});
+						break;
+				}
+			}
+			
 			
 /*            element.bind('click', function() {
             	if (scope.editable == undefined || scope.editable == false)
@@ -116,8 +148,8 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
             	alert(this);
             	
             });*/
+>>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
         }
-		
 	};	
 });
 
@@ -126,6 +158,9 @@ angular.module('customComponent', []).directive('focusMe', function($timeout) {
 var myApp = angular.module('myApp', ['customComponent']);
 
 myApp.controller('todoCtrl',['$scope', '$http', function($scope, $http) {
+	//this.clientId = clientId;
+	$scope.formData = {};
+	$scope.newTodo = "";
 	$scope.x = "xXx content";
 	$scope.items = 
 		[
@@ -149,8 +184,29 @@ myApp.controller('todoCtrl',['$scope', '$http', function($scope, $http) {
 	
 	$scope.confirm = function()
 	{
-		alert('hi');
 	};
+	
+	$scope.processForm = function()
+	{
+		
+	}
+	$scope.isNewTodoEmpty = function(newTodo)
+	{
+		return newTodo === "";
+	}
+	$scope.deleteItem = function(item)
+	{
+		if (confirm('是否確認要刪除' + item.content) == false)
+			return false;
+		
+	}
+	$scope.logout = function()
+	{
+		alert('ready to logout');
+		return false;
+		
+	}
+
 }]);
 //})();
 /*

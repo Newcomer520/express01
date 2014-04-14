@@ -1,7 +1,7 @@
 .container 
 {
 	/*background-color: black;*/
-	max-width: 970px;
+	/*max-width: 970px;*/
 	border-left: 1px solid silver;
 	border-right: 1px solid silver;
 }
@@ -12,7 +12,7 @@
   	border-top-left-radius: 5px;
   	border-top-right-radius: 5px;
   	background-color: black;
-  	max-width: 970px;
+  	/*max-width: 970px;*/
   	margin-left: auto;
   	margin-right: auto;
   	margin-top: 20px;
@@ -56,10 +56,20 @@ li.active a
 	padding-top: 30px;
 	border-top: 1px solid silver;
 }
-
+.outter
+{
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 970px;
+}
+.container
+{
+	width: 100%;
+}
 @media screen and (min-width: 768px) and (max-width: 1000px)
 {
-	ul.nav
+	/*ul.nav*/
+	.outter
 	{
 		width: 750px;
 	}

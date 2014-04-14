@@ -1,32 +1,46 @@
 <!-- linux path is different from windows one -->
 <!-- layout(global.appDir + '/views/basic.ejs')  -->
 <% layout('../basic.ejs') -%>
-<% script('//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js') %>
-<% script('script/todo/todo.js') -%>
+<% script('//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js') -%>
+<% script('script/api/oauth.js') -%>
 <% stylesheet('stylesheets/todo/todo.css') -%>
 <% stylesheet('stylesheets/ng-component.css') -%>
 
 
-<div class="table-container" ng-app="myApp" ng-controller="todoCtrl">
-	<input class="new-todo new-todo-input" focus-me="true" placeholder="new to-do" />
-	<button class="new-todo" ">新增</button>
-	<button class="new-todo">存檔</button>
+<div class="table-container" ng-app="myApp" ng-controller="todoCtrl as todo">
+	<div>
+		<a href="/auth/google">Authorize</a><br/>
+		isauthenticated? <%= isAuthenticated %><br/>
+		<a href="/logout" ng-click="logout()">Log out</a>
+	</div>
+	<hr />
+	<form>
+		<input class="new-todo new-todo-input" focus-me="true" placeholder="new to-do" ng-model="newTodo" />
+		<button class="new-todo" ng-disabled="isNewTodoEmpty(newTodo)" >新增</button>
+		<button class="new-todo" type="submit">存檔</button>
+	</form>
 	<table class="table">
-    	<thead>
-    		<tr>
-        		<th>事項</th>
-        		<th>已確認</th>
-        		<th>刪除?</th>
-    		</tr>
-    	</thead>
-    	<tbody>
-    		<!--<tr ng-repeat="item in items"><td><c-textarea show-icon="true" editable="item.editable">{{item.name}}</c-content></td><td>test</td><td></td></tr>-->
-    		<tr ng-repeat="item in items">
-    			<td c-editflag="textarea" c-editable="item.editable" c-showicon="true" c-content="item.content"></td>
-    			<td><input type="checkbox" ng-model="item.confirmed" ng-change="confirm()"/></td>
-    			<td><input type="checkbox"/></td>   			
-    			<!--<td c-editflag="textarea">{{item.name}}</td>-->
-    		</tr>	
-    	</tbody>
+	    	<thead>
+	    		<tr>
+	        		<th>事項</th>
+	        		<th style="text-align:center;" >已確認</th>
+	        		<th style="text-align:center;" >刪除?</th>
+	    		</tr>
+	    	</thead>
+	    	<tbody>
+	    		<!--<tr ng-repeat="item in items"><td><c-textarea show-icon="true" editable="item.editable">{{item.name}}</c-content></td><td>test</td><td></td></tr>-->
+	    		<tr ng-repeat="item in items">
+	    			<td c-editflag="textarea" c-editable="item.editable" c-showicon="true" c-content="item.content"></td>
+	    			<td style="text-align:center;" ><input type="checkbox" ng-model="item.confirmed" ng-change="confirm()"/></td>
+	    			<td style="text-align:center;" ><button ng-model="item" ng-click="deleteItem(item)">Delete</button></td>   			
+	    			<!--<td c-editflag="textarea">{{item.name}}</td>-->
+	    		</tr>	
+	    	</tbody>
 	</table>
+	
+	<hr />
+	<pre style="height:200px;overflow:auto;">
+		this.clienId: {{todo.clientId}}
+		{{items | json}}
+	</pre>
 </div>

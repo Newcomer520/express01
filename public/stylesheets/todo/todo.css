@@ -33,7 +33,7 @@ thead {
 
 tbody tr:first-child td
 {
-	border-top: none;
+	border-top: none !important;
 }
 tbody td:not(:first-child), thead th:not(:first-child) {
     width: 20%;
@@ -47,9 +47,12 @@ tbody td, thead th {
 
 
 
-.new-todo
+button:not(:disabled)
 {
 	color: black;
+}
+.new-todo
+{
 	margin-right: 10px;	
 }
 .new-todo-input
@@ -64,8 +67,10 @@ tbody td, thead th {
 	width: 50%;
 	
 }
-.c-editor
+button 
 {
-	color: #000000;
-	
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
 }

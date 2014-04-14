@@ -7,7 +7,7 @@ var todoSchema = mongoose.Schema({
 });
 var todo = mongoose.model('todos', todoSchema);*/
 
-var todos = require(global.appDir + '/ORM/todos.js');
+var todos = require(global.appDir + '/ORM/todo.js');
 
 exports.index = function(req, res)
 {
@@ -71,7 +71,23 @@ exports.create = function(req, res, next)
 };
 
 exports.getAll = function(req, res) {
-	todos.getAll(function(data) {
+	todos.find({}, function(err, docs) {
+		if (err)
+			throw err;
+		var items = [];
+		docs.forEach(function(item) {
+			items.push(
+				{
+					content: item.content,
+					confirmed: item.confirmed,
+					editable: true
+				}
+			);
+		});
+		res.json(items);
+	})
+	
+	/*todos.getAll(function(data) {
 		var items = [];
 		data.forEach(function(item) {
 			items.push(
@@ -83,5 +99,5 @@ exports.getAll = function(req, res) {
 			);
 		});
 		res.json(items);
-	});
+	});*/
 }
