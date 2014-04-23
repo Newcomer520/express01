@@ -1,0 +1,36 @@
+<% layout('./basic.ejs') -%>
+<% stylesheet('stylesheets/chat.css') %>
+<% script('//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min.js') %>
+<% script('script/chat.js') %>
+<div class="row">
+	<div class="col-md-12">
+		<div class="chat-content">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<form id="messageForm">
+		 	<textarea id="message">
+		 	</textarea>
+		 	<button id="btnSend" class="btn btn-default"  data-target=".bs-example-modal-sm">Send</button>
+		</form>
+	</div>	 	
+</div>
+<div class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content modal-ask-name">
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<!--<label for="inputName" class="col-xs-3 control-label">暱稱</label>
+					<div class="col-xs-6">
+						<input type="nickname" class="form-control" id="inputName" placeholder="input your nickname">
+					</div>
+					<div class="col-xs-2">
+						<button class="btn btn-default">OK</button>
+					</div>-->
+				</div>			
+			</form>	
+		</div>
+	</div>
+</div>

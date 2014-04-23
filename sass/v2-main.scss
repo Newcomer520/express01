@@ -1,0 +1,87 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/v2-main.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/reset";
+@import "compass/css3";
+@import "compass/typography/links";
+
+$defRadius: 5px;
+
+body
+{
+	background-color: black;
+}
+
+.outter
+{
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-bottom: 20px;
+	@include border-corner-radius(top, left, $defRadius + 2);
+	@include border-corner-radius(top, right, $defRadius + 2);
+	@include border-corner-radius(bottom, left, $defRadius + 2);
+	@include border-corner-radius(bottom, right, $defRadius + 2);
+	border: 0px solid silver;
+	background-color: black;
+}
+
+.container
+{
+	width: 100%;
+}
+
+.mainBody
+{
+	color: silver;
+	box-sizing: border-box;
+}
+
+.nav-justified
+{
+	margin-bottom: 10px;
+	border: 0px solid black;
+	@include border-corner-radius(top, left, $defRadius);
+	@include border-corner-radius(top, right, $defRadius);	
+	@include box-shadow(white 0px 1px 0px);	
+	li
+	{
+		&.active
+		{
+			a:after
+			{
+				content: "";
+				width: 100%;
+				height:4px;
+				position: absolute;
+				top: 90%;
+				left: 0%;
+				border: 2px solid silver;
+				@include border-radius(4px);	
+			}
+		}
+
+		a 
+		{
+			font-weight: bold;
+			@include link-colors(white, black);
+			@include transition-property(all);
+			@include transition-duration(0.5s);
+			&:hover
+			{
+				background: linear-gradient(color-stops(rgba(247,247,247,1), rgba(107,100,103,1)));
+				@include border-radius($defRadius);		
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 1000px)
+{
+	.outter
+	{
+		width: 970px;
+	}
+}

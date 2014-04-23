@@ -1,0 +1,60 @@
+/*@import "compass/reset";*/
+@import "compass/css3";
+@import "compass/typography";
+
+@mixin calc($property, $expression) { 
+  #{$property}: -webkit-calc(#{$expression}); 
+  #{$property}: calc(#{$expression}); 
+} 
+
+$width: 80%;
+.chat-content
+{
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 15px;
+	overflow: auto;
+	background-color: white;
+	width: $width;
+	height: 300px;
+	padding-bottom: 100px;
+	border-bottom: 2px solid silver;
+
+}
+
+#messageForm
+{
+	width: $width;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+}
+
+
+#message
+{
+	width: 80%;
+	/*@include calc(width, "95% - 54px");*/
+	height: 100px;
+	vertical-align: bottom;
+	color: black;
+}
+#btnSend
+{
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	width: 54px;
+}
+.modal-ask-name
+{	
+	height: 200px;
+}
+.modal.c-fade{
+-webkit-transition: opacity .15s linear;
+transition: opacity .15s linear;
+}
+.form-horizontal
+{
+	padding-top: 10px;
+}

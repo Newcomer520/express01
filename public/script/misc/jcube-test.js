@@ -2,55 +2,22 @@
  * New node file
  */
 
-function jCubeByI()
-{
-	//return 
-	{
-		resetColumn:1
-	   	//success: function(d,txt,xhr) {
-	   		//var cube=xhr.srcObject;
-				//cube.resetColumn(d,xhr);
-				//cube.insertData(d,xhr);
-	   	//}
-		
-	};
-	var ret = 
-	{
-		resetColumn: function(d, xhr)
-		{
-			/*
-	 	    var cube = this, cw = [],vCol = cube.vCol, s = xhr.getResponseHeader('groupColumn');
-			while (vCol.cols.length >0) vCol.cols.pop();
-			  if (defined(s) && s!="" ) vCol.vCols=decodeURIComponent(s); //IE8 s == "" default 
-		    s=xhr.getResponseHeader('verticalColumn');
-			  if (defined(s) && s!="") {
-			  	var w=decodeURIComponent(s).split(',');
-			  	each(w, function(v,i) { vCol.cols.push({name:v}); });
-			  	*/
-			
-			
-		},
-		success: function(d, txt, xhr, json)
-		{
-			
-		}
-	};
-	return ret;
-}
 
 $(document).ready(function() {
-	
 	var tblOption = {
+		id: 'tb1',
 		type: 'lazy-cube',
 		url: 'http://tnvcmipad.cminl.oa/mvc/test/testc2',
+		parentNode: $('#jCubeContainer')[0],
 		table: {
-			height:400, 
-			width:800
+			height: 400, 
+			width: 1000
 		},
 		name: 'Lazy Cube',
 		header: {
 			
-			measures: { 
+			measures: 
+			{ 
 				BARE_COST:
 				{
 					width: 70, 
@@ -64,33 +31,37 @@ $(document).ready(function() {
 			}			
 		},
 		hCol://row dimension
-		[				
+		[	
+			
 			{
 				id: 'mfgCat',
-				name: '製造種類'
+				name: '製造種類',
+				width: '100px'
 			},
-			
 			{
 				id: 'plant',
 				name: '週別'
 			}
+			
 		],
 		vCol://column dimension
 		[
+			
 			{
 				id: 'number',
 				name: '號碼'
 			},
-			{
+			{	
 				id: 'costCat', 
 				name: '樣式'
 			}
+									
 		],
-		style:{
+		/*style:{
 			position:'absolute',
 			top:'20px', 
 			left:'10px'
-		},
+		},*/
 		bodies:[{id:'bd1'}],
 		toolbar:  {
 			pager:false,				
@@ -110,18 +81,74 @@ $(document).ready(function() {
 			}
 		}
 	};
+	var tblOption0 = $.extend({}, tblOption);
+	tblOption0.id = 'tb0';
+	tblOption0.bodies = [{id: 'bd0'}];
+	tblOption0.lazy = true;
+	var jt = new jTable(tblOption0);
 	
-	var jt = new jTable(tblOption);
 	
+	var jt2 = new jTable(tblOption);
+	/*
+	$.ajax({
+		url: 'http://tnvcmipad.cminl.oa/mvc/test/testc2',
+		xhrFields: {
+		    withCredentials: true
+		}
+	})
+	.done(function(raws) {
+		jt.resetPivot(raws.data);
+		//jt.resetColumn(raws.data);
+		//jt.postResetColumn();
+		//var data = jt.pivot(raws.data);
+		//jt.insertData(data);
+	});*/
+
 	ajax({
 		url: 'http://tnvcmipad.cminl.oa/mvc/test/testc2',
 		withCredentials: true,
-		success: function(d, txt, xhr, json)
-		{
-			jt.resetColumn(d, xhr);
-			
-		}
+		success: function(d, txt, xhr) {
+			var raws = JSON.parse(xhr.responseText);
+			jt.resetPivot(raws.data);
+			var data = jt.pivot(raws.data);
+			jt.insertData(data);
+		}		
 	});
+
+	ajax({
+		url: 'http://tnvcmipad.cminl.oa/mvc/test/testc2',
+		withCredentials: true,
+		success: function(d, txt, xhr) {			
+			var raws = JSON.parse(xhr.responseText).data;
+			var data;
+			jt2.resetColumn(raws);
+			jt2.postResetColumn();
+			data = jt2.pivot(raws);
+			jt2.insertData(data);
+		}		
+	});
+	/*
+	 * 取得各dimension的values
+	 * */
+	function generateDimensionValues1(cols, data) {
+		var distinctColValues = [];
+        each(cols, function (col, idx) {
+        	/*var currentCol = 
+        	{
+    			id: col.id,
+    			values: []
+    		};*/        	
+        	col.values = [];
+            tmpLookup = {};
+            each(data, function (item, j) {
+                if (!(item[col.id] in tmpLookup)) {
+                    tmpLookup[item[col.id]] = 1;
+                    //distinctColValues.push(item[col.id]);
+                    col.values.push(item[col.id]);
+                }
+            });
+        });
+    }
 	
 	
 /*

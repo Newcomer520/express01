@@ -16,11 +16,10 @@ exports.index = function(req, res){
 //bootstrap
 exports.portal = function(req, res) {
 var htmlpath = global.appDir + '/views/todo/1.ejs';
-	
 	//custom.readHtml(htmlpath, cb);
-	res.render(global.appDir + '/views/todo/1.ejs', {current:'main', title: 'To-do List', isAuthenticated: req.isAuthenticated()});
-	
+	res.render(global.appDir + '/views/todo/1.ejs', {current:'main', title: 'To-do List', isAuthenticated: req.isAuthenticated()});	
 };
+
 exports.portalByChain = function(req, res) {
 
 	
@@ -62,6 +61,13 @@ exports.setCookie = function( req, res, next) {
 	next();
 	
 }
+
+exports.chat = function(req, res) {
+var htmlpath = global.appDir + '/views/chat.ejs';
+	//custom.readHtml(htmlpath, cb);
+	res.render(global.appDir + '/views/chat.ejs', {current:'chat', title: 'Chat Room', isAuthenticated: req.isAuthenticated()});	
+};
+
 
 function guid() {
 	function s4() {

@@ -24,7 +24,7 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 global.locals = {
-	root: 'http://localhost:3000//',
+	root: 'http://localhost:3000/',
 	dbLocation: {
 		nodeTest: 'mongodb://localhost:27017/nodeTest'
 	}
@@ -74,6 +74,7 @@ if ('development' == app.get('env')) {
 app.get('/V2', routes.index);
 app.get('/', routes.portal);
 app.get('/sunflower', routes.sunflower);
+app.get('/chat', routes.chat);
 //app.get('/users', user.list);
 app.get('/mongo', mongo.index);
 app.get('/mongo/getlist', mongo.getList);

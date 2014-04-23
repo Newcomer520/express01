@@ -8,11 +8,16 @@
 			<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
 			<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
 			<link rel="stylesheet" href="/stylesheets/ng-component.css" />
-			<link rel="stylesheet" href="/stylesheets/v2.css" />
+			<link rel="stylesheet" href="/stylesheets/v2-main.css" />
 			
 			<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 			<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>		
 			<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+			<!--[if lt IE 9]>
+	        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js">
+			<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+	        </script> <![endif]-->
+
 			<title><%= title %></title>
 			<%-scripts%>
 			<script>
@@ -31,15 +36,15 @@
 			<ul class="nav nav-justified">
 				 <li class="<%= current=='main' ? 'active' : ''%>"><a href="/">Main</a></li>
 				 <li class="<%= current=='sunflower' ? 'active' : ''%>"><a href="/sunflower">太陽花學運</a></li>
-				 <li class="<%= current=='mongo' ? 'active' : ''%>"><a href="/mongo">芒果</a></li>
+				 <li class="<%= current=='jCube' ? 'active' : ''%>" ><a href="/jcube">jCube</a></li>
 				 <li class="dropdown">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						工作階段 <span class="caret"></span>
+					工作階段 <span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-							<li class="<%= current=='jCube' ? 'active' : ''%>" ><a href="/jcube">jCube</a></li>
-							<li><a href="#">test</a></li>
-							<li><a href="#">nope</a></li>
+					<li class="<%= current=='jCube' ? 'active' : ''%>" ><a href="/jcube">jCube</a></li>
+					<li class="<%= current=='chat' ? 'active' : ''%>" ><a href="/chat">Chat</a></li>
+					<li><a href="#">nope</a></li>
 				</ul>
 	  		</li>
 	    	</ul>

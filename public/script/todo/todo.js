@@ -2,6 +2,7 @@
  * New node file
  */
 //angular.module('focusMe', function($timeout) {
+(function(){
 angular.module('customComponent', [])
 .directive('focusMe', function($timeout) {
 	  return {
@@ -71,7 +72,6 @@ angular.module('customComponent', [])
 					//element[0].childNodes[element[0].childNodes.length - 2].className + ' c-hidden';
 				//element[0].childNodes[element[0].childNodes.length - 2].style.visibility = 'hidden';				
 			}
-			
 			if (scope.editable == true) {
 				editor.bind('change', function() {
 					content.addClass('c-updated');
@@ -103,52 +103,6 @@ angular.module('customComponent', [])
 						break;
 				}
 			}
-			
-			if (scope.editable == true) {
-				editor.bind('change', function() {
-					content.addClass('c-updated');
-				});
-				editor.bind('blur', function() {
-					editor.addClass('c-hidden');
-					content.removeClass('c-hidden');
-					if (scope.showicon == true) {
-						btn.removeClass('c-hidden');
-					}
-				});
-				switch(scope.showicon) {
-					case true:
-						btn.bind('click', function() {
-							content.addClass('c-hidden');
-							editor.removeClass('c-hidden');
-							btn.addClass('c-hidden');
-							editor.focus();
-							editor.select();
-						});
-						break;
-					default:
-						element.bind('click', function() {
-							content.addClass('c-hidden');
-							editor.removeClass('c-hidden');
-							editor.focus();
-							editor.select();
-						});
-						break;
-				}
-			}
-			
-			
-/*            element.bind('click', function() {
-            	if (scope.editable == undefined || scope.editable == false)
-	        		return true;
-            	switch(scope.editflag)
-            	{
-            		case 'textarea':
-            			break;
-            	}
-            	alert(this);
-            	
-            });*/
->>>>>>> d6c12630a72a1715b929555eff3e863fb46a71a4
         }
 	};	
 });
@@ -206,7 +160,6 @@ myApp.controller('todoCtrl',['$scope', '$http', function($scope, $http) {
 		return false;
 		
 	}
-
 }]);
 //})();
 /*

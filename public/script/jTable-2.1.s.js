@@ -1671,6 +1671,64 @@ addCommas = J10Adapter.addCommas
         } 
     }
 
+    function jElement(o)
+    {
+        t = extend({}, o);
+        var _element;
+
+        if (defined(o.DOMElement)) {
+            _element = o.DOMElement;
+        }
+        else if (t.tag && typeof t.tag === 'string') {
+            _element = DOC.createElement(t.tag);
+        }
+        
+
+        var ret = 
+        {
+            $element: $(_element),
+            element: _element,
+            appendTo: function(parent)
+            {
+                //if( Object.prototype.toString.call( someVar ) === '[object Array]' )
+                if (parent && isElement(parent)) {
+                    parent.appendChild(_element);
+                }
+            },
+            removeAll: function() 
+            {
+                if (_element) {
+                    while(_element.childNodes.length > 0)
+                        _element.removeChild(_element.childNodes[0]);
+                }
+                //return this;
+            },
+            append: function(o) {
+                var $children = $(o);
+                $(_element).append($children);
+            }
+        };
+
+        return ret;
+        
+
+        function isElement(obj) {
+            try {
+            //Using W3 DOM2 (works for FF, Opera and Chrom)
+               return obj instanceof HTMLElement;
+            }
+            catch(e){
+            //Browsers not supporting W3 DOM2 don't have HTMLElement and
+            //an exception is thrown and we end up here. Testing some
+            //properties that all elements have. (works on IE7)
+                return (typeof obj==="object") &&
+                       (obj.nodeType===1) && (typeof obj.style === "object") &&
+                       (typeof obj.ownerDocument ==="object");
+            }
+        }
+
+    }
+
     /*+parserIdx jTbody.prototype.jTbody(object) 
     ptions,
     colStyle[]: column styles [{toFixed:2,textAlign:'left'},{},{}...]
@@ -2930,23 +2988,29 @@ addCommas = J10Adapter.addCommas
     */
     function jTable(options) {
         var defaultPlotOptions = { events: {} };
-        var tb = this, t = extend({ toolbar: { pager: false, btn: [] }, id: '', className: 'mytable', bodies: [], type: 'jTable'
+        var tb = this, t = extend({ toolbar: { pager: false, btn: [] }, id: '', className: 'mytable', bodies: [], type: 'jTable', colGroup: false
         }, deepExtend({ plotOptions: defaultPlotOptions, header: {} }, options));
 
         //if (t.type == 'cubeTable') { tb = new cubeTable(); }
         tb.type = t.type;
         switch (t.type) {
             case 'cubeTable':
-                tb = new cubeTable();
+                tb = new cubeTable();                
                 break;
-            case 'lazy-cube':
-                tb = new lazyCube(lazyCubeSetting);
+            case 'lazy-cube': //lazy-cube自行處理所有的rule
+                t.colGroup = true;
+                tb = new lazyCube(lazyCubeSetting, t.lazy);
                 break;
         }
 
-        if (options && (t.id || !defined(t.tblObj)) && DOC.body) {
+        if (options && (t.id || !defined(t.tblObj)) && DOC.body) {            
             if (t.id == "" || !defined(t.id)) t.id = 'tbl1';
-            tb.tblObj = appendChild((t.parentNode) ? t.parentNode : DOC.body, { tag: 'TABLE', className: t.className, id: t.id, style: 'width:1000px;table-layout:fixed;overflow:hidden;' });
+            var tblStyle = t.colGroup === true ? 'table-layout:fixed;overflow:hidden;' : 'width:1000px;table-layout:fixed;overflow:hidden;';
+            tb.tblObj = appendChild((t.parentNode) ? t.parentNode : DOC.body, { tag: 'TABLE', className: t.className, id: t.id, style: tblStyle});
+            if (t.colGroup === true) {                
+                tb.colGroup = new jElement({tag: 'colgroup'});
+                tb.colGroup.appendTo(tb.tblObj);
+            }            
             tb.tblObj.appendChild(DOC.createElement('THEAD'));
             tb.tblObj.appendChild(DOC.createElement('TFOOT'));
         }
@@ -2968,7 +3032,7 @@ addCommas = J10Adapter.addCommas
         init: function (o) {
             var r, i, tb = this;
             tb.renderTo = tb.tblObj.parentNode;
-            extend(tb.tblObj.style, o.style);
+            extend(tb.tblObj.style, o.style);                        
             tb.tHead = new jTbody({ tBody: tb.tblObj.tHead, parentNode: tb, post: {} });
             tb.tFoot = new jTbody({ tBody: tb.tblObj.tFoot, parentNode: tb, post: {} });
             tb.tBodies = [];
@@ -2977,7 +3041,10 @@ addCommas = J10Adapter.addCommas
             var s = getCookie('colsWidth' + tb.tblObj.id), w = [], rIdx;
             if (s.length > 0) w = s.split(',');
             if (!(defined(o.header.colsWidth)) || w.length == o.header.colsWidth.length) {
-                each(w, function (v, i) { w[i] = v.toInt(); });
+                each(w, function (v, i) { 
+                	w[i] = v.toInt();
+            	});
+                
                 tb.setColsWidth(w);
             } else if (o.header.colsWidth) tb.setColsWidth(o.header.colsWidth);
             if (o.header.colsText) rIdx = tb.tHead.createHeader(o.header.colsText, -1);
@@ -3868,7 +3935,8 @@ addCommas = J10Adapter.addCommas
                 r = jTbody.prototype.insertRow.apply(bd, [{ data: ttl, className: jInfo.clsName.treeRow}]);
 
                 r.data = { layer: 0 };
-            } else if (d.length > 0 && xhdr.getResponseHeader('rowCount') > 0) {
+            } 
+            else if (d.length > 0 && xhdr.getResponseHeader('rowCount') > 0) {
                 for (var i = 0; i < d.length; i++) {
                     var r = bd.insRow({ data: d[i], className: jInfo.clsName.treeRow });
                     r.childNodes[l - 1].onclick = function () {
@@ -4034,118 +4102,461 @@ addCommas = J10Adapter.addCommas
             }
 
             var isxxx = (isCT || xhr.getResponseHeader('queryLanguage') == 'MDX') && cube.hCol.cols.length > 0;
-            postResetColumn(isxxx, cube);
-
         },
-        postResetColumn: function (isxxx, cube) {
-            var cubeHeader = [cube.options.header.colsText[0]]
+        postResetColumn: function () {
+            var cube = this
+              , cubeHeader = [cube.options.header.colsText[0]]
               , cw = []
-              , l = cube.vCol.cols.length;
+              , l = cube.vCol.cols.length
+              , headerSpan = 0
+              , ttlLen
+              , ttl
+              , hColLength
+              , i
+              , j
+              , d0
+              , ml = cube._measures.length
+              , tmps = []
+              , tmp = [];
+            
+
+            cube.tHead.removeAll(0);
+            var $tHeadRow;
+            $tHeadRow = $('<tr/>');
+
+
 
             cubeHeader.push('+c' + (l));
-            for (i = 0; i < l - 1; i++) cw.push(21);
-            cw.push(200); //cube first column width width
+            //for (i = 0; i < l - 1; i++) //cw.push(21);
+                //cw.push(200); //cube first column width width
+            for (i = 0; i < l; i++) {
+                cw.push(100);
+                headerSpan++;
+            }
+            
+            cubeHeader.push('+c' + headerSpan);
 
-            if (isxxx == true) {
-                var ttlLen
-                  , ttl
-                  , deep;
-                var i
-                  , j
-                  , d0;
-                var ml = cube._measures.length;
+            
 
-                deep = cube.hCol.cols.length;
-                d0 = cube.hCol.cols[0].value;
-                for (i = 0, ttl = 1; i < deep; i++)
-                    ttl *= cube.hCol.cols[i].value.length;
+            hColLength = cube.hCol.cols.length;
+            d0 = cube.hCol.cols[0].value;
+            
+            //ttl: hCol 各層最後的總長度, ml: measure length
+            for (i = 0, ttl = 1; i < hColLength; i++)
+                ttl *= cube.hCol.cols[i].value.length;
+            
+            ttlLen = ttl * ml + l;//l: 左邊為vCol的column個數
 
-                var tmps = []
-                  , tmp = [];
-                ttlLen = ttl * ml + l;
-                for (var k = 0; k < deep; k++) {
-                    d0 = cube.hCol.cols[k].value;
-                    for (i = 0; i < d0.length; i++) {
-                        j = (ttl / d0.length) * ml;
-                        tmp = tmp.concat([d0[i], '+c' + j]);
-                        if (k == 0) for (var idx = 0; j > 0; j--) {
+
+            for (var k = 0; k < hColLength; k++) {
+                d0 = cube.hCol.cols[k].value;
+                for (i = 0; i < d0.length; i++) {
+                    j = (ttl / d0.length) * ml;
+                    tmp = tmp.concat([d0[i], '+c' + j]);
+                    if (k == 0) {
+                        for (var idx = 0; j > 0; j--) {
                             cw.push(cube._measures[idx].width);
                             if (++idx >= cube._measures.length) idx = 0;
                         }
                     }
-                    tmps.push(tmp);
-                    tmp = [];
-                    ttl = ttl / d0.length;
                 }
-                var mea = [];
-                each(cube._measures, function (v, idx) { mea.push(v.showName); });
-                tmps.push(mea);
-                cubeHeader.splice(1, 0, '+r' + (deep));
+                tmps.push(tmp);
+                tmp = [];
+                ttl = ttl / d0.length;
+            }
 
-                cube.tHead.removeAll(0);
-                cube.setColsWidth(cw);
-                cube.tHead.createHeader(cubeHeader.concat(tmps[0]));
-                cube.tHead.rows[1].firstChild.className += ' cubeHeaderLeftTop';
-                cubeHeader.splice(1, 1);
-                for (j = 1; j < tmps.length; j++) {
-                    var tmp = tmps[j].slice(0, tmps[j].length);
-                    for (i = 1; i < tmps[j - 1].length / 2; i++) tmps[j] = tmps[j].concat(tmp);
-                    /* measure rows */
-                    if (j == tmps.length - 1) {
-                        tmps[j].splice(0, 0, cube.vCol.toString().replace(/,/ig, ' '), '+c' + (l));
-                    }
-                    cube.tHead.createHeader(tmps[j], -1);
+            var mea = [];
+            each(cube._measures, function (v, idx) { mea.push(v.showName); });
+            tmps.push(mea);
+
+            cubeHeader.splice(1, 0, '+r' + (hColLength));
+
+            cube.tHead.removeAll(0);
+            cube.setColsWidth(cw);
+            cube.tHead.createHeader(cubeHeader.concat(tmps[0]));
+            cube.tHead.rows[1].firstChild.className += ' cubeHeaderLeftTop';
+            cubeHeader.splice(1, 1);
+            
+            for (j = 1; j < tmps.length; j++) {
+                var tmp = tmps[j].slice(0, tmps[j].length);
+                for (i = 1; i < tmps[j - 1].length / 2; i++) tmps[j] = tmps[j].concat(tmp);
+                /* measure rows */
+                if (j == tmps.length - 1) {
+                    tmps[j].splice(0, 0, cube.vCol.toString().replace(/,/ig, ' '), '+c' + (l));
                 }
-
+                cube.tHead.createHeader(tmps[j], -1);
             }
-            else {
-                for (var i = 0; i < mea.length; i++) cw.push(100);
-                //if (cube.tHead.rows[0].childNodes.length != cw.length) {
-                cube.setColsWidth(cw);
-                each(cube._measures, function (v, idx) { cubeHeader.push(v.showName); });
-
-                cube.tHead.createHeader(cubeHeader);
-                //}
-                cube.crossTab = false; /* hCol*/
-            }
+            
             cube.tFoot.rows[0].firstChild.colSpan = cube.tHead.rows[0].childNodes.length;  //r.childNodes.length;
         }
     });
 
     function lazyCubeSetting() {
+        var _private = 
+        {
+            a: 'i am a',
+            colGroup: $('<colGroup/>'),
+            raws: undefined
+        };
+        
+
         var ret =
-	{
-	    resetColumn: function (d, xhr) {
-	        var cube = this
-			  , cw = []
-			  , vCol = cube.vCol
-			  , hCol = cube.hCol
-			  , s
-			  , jsonRet = JSON.parse(xhr.responseText)
-			  , tmpLookup;
+		{
+            init: function(o) {
+                var i, j, cube = this;
+                cube.options.header = deepExtend({ colsText: [o.name] }, o.header);
+                jTable.prototype.init.apply(cube, [o]);
+                if (!defined(o.vCol)) o.vCol = [];
+                cube._maxVColumns = pick(o.table.maxVColumns, 4);
+                //var off=offset(cube.container);
+                //if (!defined(o.cube.width)) o.cube.width= DOC.body.clientWidth-off.left-2;
+                //if (!defined(o.cube.height)) o.cube.height=DOC.body.clientHeight-off.top-2;
 
-	        //reset values of each dimension
-	        generateDimensionValues(vCol.cols, jsonRet.data);
-	        generateDimensionValues(hCol.cols, jsonRet.data);
-	        
-	        cube.postResetColumn(cube.hCol.cols.length > 0, cube);
-	        
-	        function generateDimensionValues(cols, data) {
-	            each(cols, function (col, idx) {
-	                tmpLookup = {};
-	                col.value = [];
-	                each(data, function (item, j) {
-	                    if (!(item[col.id] in tmpLookup)) {
-	                        tmpLookup[item[col.id]] = 1;
-	                        col.value.push(item[col.id]);
-	                    }
-	                });
-	            });
-	        }
-	    }
-	};
+                //cube.container.style.width = o.cube.width + 'px';
+                //cube.container.style.height = o.cube.height + 'px';       
+                /* 2 header rows */
+                //tblOpt.parentNode = cube.container;   
+                // replace the first column text with cube.title
+                //  tblOpt.header.colsText.splice(0,1,o.title.text); 
+                //  if (o.title.width) tblOpt.header.colsWidth.splice(0,1,o.title.width);   
+                //cube.table = new jTable(tblOpt);  
+
+                //var td=tbl.toolbar[0].firstChild; 
+                var btn = cube.setToolBar({ set: 'insert',
+                    btn: [{ tag: 'INPUT', type: 'button', value: '', className: 'JTBtnDown', style: 'position:absolute;right:5px;left:auto;top:auto;bottom:4px;',
+                        f: function () {
+                            event.cancelBubble = true;
+                            var elm = this;
+                            fireEvent(cube.vCol, 'ConfigCol');
+                        }
+                    }]
+                });
 
 
+                //extend(cube.table,tblOpt);    
+                //cube.table.cube = cube;
+                //extend(cube,o.cube);
+                //body.plotOptions = o.plotOptions;
+
+                cube.vCol = new vCol(cube, pick(o.vColumns, o.vCol));
+                if (defined(o.hCol)) {
+                    cube.hCol = new hCol();
+                    cube.hCol.init(cube, o.hCol);
+                }
+                cube._measures = [];
+                if (defined(o.header.measures)) {
+                    var measures = o.header.measures;
+                    for (var k in measures) {
+                        cube._measures.push({ name: k, showName: pick(measures[k].name, k), width: pick(measures[k].width, 80)
+                        , aggregate: pick(measures[k].aggregate, function (ret, strValue) { return ret + String(strValue).toFloat(); })
+                        });
+                    }
+                }
+                var defCubeAjaxOpt = {
+                    url: (cube.options.url) ? cube.options.url : cube.options.name + '.aspx',
+                    crossTab: function (d) {
+                    },
+                    data: {},
+                    success: function (d, txt, xhr) {
+                        var cube = xhr.srcObject;
+                        cube.resetColumn(d, xhr);
+                        cube.insertData(d, xhr);
+                    }, error: function (xhr, sts, txt) {
+                        alert(sts);
+                    }, onready: 'Load'
+                };
+                var defPlotOptions = { measures: { width: 70 },
+                    rows: {
+                        formatter: function (cube) {
+                            var c, r = this, startIndex = r.data.layer;
+                            if (cube.scrollX) {
+                                r = cube.tBodies[0].tBody.neighbor.childNodes[r.sectionRowIndex];
+                                startIndex = 0;
+                            }
+                            for (c = r.childNodes[r.data.layer]; c; c = c.nextSibling) c.innerText = addCommas(c.innerText, 3);
+                        }
+                    }
+                };
+                cube.options.ajaxOptions = deepExtend(defCubeAjaxOpt, cube.options.ajaxOptions);
+                cube.options.plotOptions = deepExtend(defPlotOptions, cube.options.plotOptions);
+                return cube;                
+            },
+		    resetColumn: function (data) {
+		        var cube = this
+				  , cw = []
+				  , vCol = cube.vCol
+				  , hCol = cube.hCol
+				  , s
+				  , jsonRet
+				  , tmpLookup;
+	
+		        //reset values of each dimension
+		        generateDimensionValues(vCol.cols, data);
+		        generateDimensionValues(hCol.cols, data);
+		    },
+            resetPivot: function(data) {
+                //while(this.colGroup.childNodes.length > 0 )
+                var cube = this;
+                var totalColumn = 1;
+                cube.colGroup.removeAll();               
+                cube.tHead.removeAll(0);
+                cube.tBodies[0].removeAll(0);
+
+                generateDimensionValues(cube.vCol.cols, data);
+                generateDimensionValues(cube.hCol.cols, data);
+
+                each(cube.hCol.cols, function(col, idx) {                    
+                    if (col.width)
+                        cube.colGroup.append($('<col style="width:' + col.width +'"/>'));    
+                    else
+                        cube.colGroup.append($('<col class="lazyCube-hCol"/>'));
+                });
+
+                var $tr, $th;
+                //cube name
+                $tr = $('<tr/>');
+                $th;// = $('<th/>');
+                
+                each(cube.vCol.cols, function(col, vIdx) {
+                    $th = $('<th/>');
+                    if (vIdx == 0) {
+                        $th.text([cube.options.header.colsText[0]]);
+                        $th.attr(
+                        {
+                            'colSpan': cube.vCol.cols.length,
+                            'rowSpan': cube.hCol.cols.length
+                        });
+                    }
+                    else {
+                        $th.css('display', 'none');
+                    }
+                    $th.addClass('GMCellHeader');
+                    $tr.append($th);
+                });
+
+                each(cube.hCol.cols, function(col) {
+                    totalColumn *= col.value.length
+                });
+                totalColumn *= cube._measures.length;
+                for (var i = 0; i < totalColumn; i++) {
+                   cube.colGroup.append($('<col class="lazyCube-vCol"/>')); 
+                }
+
+                $(cube.tHead.tBody).append($tr);
+
+                //將hcol 逐tr長出
+                each(cube.hCol.cols, function(col, hIdx) {
+                    if (hIdx > 0) {
+                        $tr = $('<tr/>');
+                        var tmp = ''
+                        ,   $tmp;
+
+                        each(cube.vCol.cols, function() {
+                            tmp += '<th/>';
+                        });
+                        $tmp = $(tmp);
+                        $tmp.css('display', 'none');
+                        $tr.append($tmp);                        
+                    }
+
+                    
+                    for (var i = hIdx; i >= 0; i--) {
+                        var hSpan = getColumnSpan(hIdx, cube.hCol.cols, cube._measures);                        
+                        each(col.value, function(val, vIdx) {
+                            for (var i = 0; i < hSpan; i++) {
+                                $th = $('<th/>');
+                                if ( i == 0)
+                                    $th.attr('colSpan', hSpan);
+                                else
+                                    $th.css('display', 'none');
+                                $th.text(val);
+                                $th.addClass('GMCellHeader');
+                                $tr.append($th);                                
+                            }                            
+                        });
+                    }                    
+                    $(cube.tHead.tBody).append($tr);
+                });
+                
+                
+                $tr = $('<tr/>').appendTo($(cube.tHead.tBody));
+                each(cube.vCol.cols, function(col) {
+                    $th = 
+                    $('<th/>')
+                        .addClass('GMCellHeader')
+                        .text(col.name);
+                    $tr.append($th);
+                });
+                //最後長出measure
+                for (var i = 0; i < totalColumn; i = i + cube._measures.length) {
+                    for (var j = 0; j < cube._measures.length; j++) {
+                        $th = 
+                        $('<th/>')
+                            .addClass('GMCellHeader')
+                            .text(cube._measures[j].showName)
+                            .data('name', cube._measures[j].name);
+                        $tr.append($th);                        
+                    }
+                }
+
+                
+
+                $('.JToolBar', cube.tblObj).attr('colspan', totalColumn + cube.vCol.cols.length).css('visibility', 'hidden');
+
+                
+
+                //var $thead = $('<tr><th>號馬</th><th>樣事</th></tr>');
+                //$('th', $thead).addClass('GMCellHeader');
+
+                //$(cube.tHead.tBody).append($thead);
+
+                _private.raws = data;
+
+                function getColumnSpan(hIdx, hCols, measures)
+                {
+                    var span = 1;
+                    each(hCols, function(hCol, idx) {
+                        if (!hCol.value.length || hCol.value.length == 0)
+                            return;
+                        if (idx <= hIdx)
+                            return;
+                        span *= hCol.value.length;
+
+                    });
+
+                    return span * measures.length;
+                }
+
+                function getRowSpan(hCols)
+                {
+                    var span = 1;
+                    each(hCols, function(col, idx) {
+                        span++;
+                    });
+                    return span;
+                }
+            },
+		    /* 將raw data轉成layout
+		     * 即根據所指定的vCol、hCol產生對應的table
+		     * 
+		     */
+		    pivot: function(raws) {
+		    	var data = [];	
+		    	var tbl = this;
+				var dims = {
+					horizentol: [],
+					vertical: []
+				};
+				
+				//generateDimensionValues(tbl.hCol.cols, raws);
+				//generateDimensionValues(tbl.vCol.cols, raws);
+				recMakeDims(tbl.hCol.cols, dims.horizentol);
+				recMakeDims(tbl.vCol.cols, dims.vertical);
+				
+				//row的header先長出來
+				each(dims.vertical, function(vCol) {
+					var row = $.extend([], vCol);
+					each(dims.horizentol, function(hCol) {
+						each(tbl._measures, function(measure, mIdx) {
+							row.push(''); //塞空格先
+						});					
+					});				
+					data.push(row);				
+				});
+				
+				each(data, function(row) {
+					//將raw data的資料pivot
+					each(raws, function(raw, rIdx) {
+						each(dims.horizentol, function(hCol, hIdx) {
+							var rawFound = true;						
+							for (var i = 0; i < hCol.length; i++) {
+								if (raw[tbl.hCol.cols[i].id] !== hCol[i]) {
+									rawFound = false;
+								}
+								if (rawFound === false)
+									break;
+							}
+							for (var i = 0; i < tbl.vCol.cols.length; i++) {
+								if (raw[tbl.vCol.cols[i].id] !== row[i]) {
+									rawFound = false;
+								}
+								if (rawFound === false)
+									break;
+							}
+
+							if (rawFound === false) {
+								return;
+							}
+							//insert measures
+							each(tbl._measures, function(measure, mIdx) {
+								//前面的欄位是row header
+								row[tbl.vCol.cols.length + tbl._measures.length * hIdx + mIdx] = raw[measure.name];
+							});
+						});//end of dim.horizental.foreach
+					});//end of raw.foreach
+				});//end of data.foreach				                
+				return data;
+		    },//end of function pivo
+		    insertData: function(data, bd) {
+		    	bd = bd || this.tBodies[0];
+		    	var fun = []
+		    	,	mc = []
+		    	,	cube = this
+		    	,	l = cube.vCol.cols.length;
+		    	
+		    	for (var i = 0; i < data.length; i++) {
+                    var r = bd.insRow({ data: data[i], className: jInfo.clsName.treeRow });
+                    r.childNodes[l - 1].onclick = function () {
+                        var c = this; fireEvent(c.parentNode.parentNode.data.iTbody, 'TNClick');
+                    }
+                }
+		    	
+                // insert summary row	  
+                for (j = 0, i = l; i < bd.rows[0].childNodes.length; i++) {
+                    mc.push(i);
+                    fun.push(cube._measures[j].aggregate);
+                    if (++j >= cube._measures.length) j = 0;
+                    //fun.push( function(r,i) {return r+String(i).toFloat();}); 
+                }
+		    }
+		};
+
+        //private function
+        function recMakeDims(cols, plains, idx, list) {
+            if (!plains || Object.prototype.toString.call(plains) !== '[object Array]') {
+                throw "need to assign an array to plains.";
+            }
+
+            idx = idx || 0;
+            list = list || [];      
+            
+            if (idx == cols.length) { //done
+                var newList = [];
+                plains.push(newList);
+                each(list, function(v) {
+                    newList.push(v);
+                });
+                return true;
+            }       
+            
+            var nexti = idx + 1;
+            each(cols[idx].value, function(val) {
+                list[idx] = val;
+                recMakeDims(cols, plains, nexti, list);
+            });
+        }
+        function generateDimensionValues(cols, data) {
+            each(cols, function (col, idx) {
+                tmpLookup = {};
+                col.value = [];
+                each(data, function (item, j) {
+                    if (!(item[col.id] in tmpLookup)) {
+                        tmpLookup[item[col.id]] = 1;
+                        col.value.push(item[col.id]);
+                    }
+                });
+            });
+        }  
         return ret;
     }
 
@@ -4154,7 +4565,7 @@ addCommas = J10Adapter.addCommas
         if (!defined(fnOverwritten) || typeof fnOverwritten != 'function') {
             return false;
         }
-        var overwritten = fnOverwritten(); // return a object
+        var overwritten = new fnOverwritten(); // return a object        
         for (var p in overwritten) {
             this[p] = overwritten[p];
         }

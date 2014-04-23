@@ -1,0 +1,25 @@
+.mytable
+{
+	box-sizing: border-box;
+	border-collapse: collapse;
+	table-layout: fixed;
+	word-wrap: break-word;
+	color: black;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+.mytable th
+{
+	border: 1px solid white;
+	text-align: center;
+	height: 1.5em;
+}
+
+.lazyCube-vCol
+{
+	width: 80px;
+}
+.lazyCube-hCol
+{
+	width: 100px;
+}
