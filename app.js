@@ -2,6 +2,10 @@
 /**
  * Module dependencies.
  */
+
+var ip_addr = process.env.OPENSHIFT_NODEJS_IP   || '127.0.0.1';
+var port    = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || '8080';
+
 var path = require('path');
 global.appDir = path.dirname(require.main.filename);
 
@@ -11,22 +15,23 @@ var routes = require('./routes');
 var http = require('http');
 var engine = require('ejs-locals');
 
-
-global.dbLocation = {
-	nodeTest: "mongodb://localhost:27017/nodeTest"
-};
-
 var app = express();
 
 // all environments
 app.engine('ejs', engine);
-app.set('port', process.env.PORT || 3000);
+//app.set('port', process.env.PORT || 3000);
+app.set('port', port);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 global.locals = {
-	root: 'http://localhost:3000/',
+	//root: 'http://localhost:3000/',
 	dbLocation: {
-		nodeTest: 'mongodb://localhost:27017/nodeTest'
+		nodeTest: 
+		{
+			url: 'mongodb://' + ip_addr + ':27017/nodeTest',
+			user: 'cb',
+			pass: 'openshift1024'
+		}
 	}
 };
 

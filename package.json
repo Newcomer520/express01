@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+	  "start": "node app.js --websocket-port=$OPENSHIFT_NODEJS_PORT --log-level=1"
   },
   "dependencies": {
     "express": "3.5.1",
